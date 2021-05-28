@@ -15,14 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(PLUGIN_NAME DisplaySettings)
+set(PLUGIN_NAME DisplaySettingsLgiAddons)
 set(MODULE_NAME ${NAMESPACE}${PLUGIN_NAME})
 
 find_package(${NAMESPACE}Plugins REQUIRED)
 
 add_library(${MODULE_NAME} SHARED
         DisplaySettings.cpp
+        DisplaySettingsLgiAddons.cpp
         Module.cpp
+        ServiceRegistration.cpp
 	../helpers/tptimer.cpp
         ../helpers/utils.cpp)
 
@@ -31,6 +33,16 @@ set_target_properties(${MODULE_NAME} PROPERTIES
         CXX_STANDARD_REQUIRED YES)
 
 target_include_directories(${MODULE_NAME} PRIVATE ../helpers)
+
+add_compile_definitions(USE_LGI_DEVICESETTINGS_IMPLEMENTATION)
+
+find_package(CURL)
+if (CURL_FOUND)
+        include_directories(${CURL_INCLUDE_DIRS})
+        target_link_libraries(${MODULE_NAME} PRIVATE ${CURL_LIBRARIES})
+else (CURL_FOUND)
+        message ("Curl/libcurl required.")
+endif (CURL_FOUND)
 
 find_package(DS)
 if (DS_FOUND)

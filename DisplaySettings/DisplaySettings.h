@@ -149,7 +149,7 @@ namespace WPEFramework {
 	    void onSystemAudioModeEventHandler(const JsonObject& parameters);
             //End events
         public:
-            DisplaySettings();
+            DisplaySettings(bool hdmiCecSinkAvailable = true);
             virtual ~DisplaySettings();
             //IPlugin methods
             virtual const string Initialize(PluginHost::IShell* service) override;
@@ -184,9 +184,13 @@ namespace WPEFramework {
             JsonObject getAudioOutputPortConfig() { return m_audioOutputPortConfig; }
             static IARM_Bus_PWRMgr_PowerState_t m_powerState;
 
+        const bool hdmiCecSinkAvailable;
+
         public:
             static DisplaySettings* _instance;
 
         };
+
+        void setResponseArray(JsonObject& response, const char* key, const std::vector<std::string>& items);
 	} // namespace Plugin
 } // namespace WPEFramework

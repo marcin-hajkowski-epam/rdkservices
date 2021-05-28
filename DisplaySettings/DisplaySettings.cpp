@@ -56,7 +56,6 @@ using namespace std;
 
 #define HDMI_IN_ARC_PORT_ID 1
 
-
 #define HDMICECSINK_CALLSIGN "org.rdk.HdmiCecSink"
 #define HDMICECSINK_CALLSIGN_VER HDMICECSINK_CALLSIGN".1"
 #define HDMICECSINK_ARC_INITIATION_EVENT "arcInitiationEvent"
@@ -131,13 +130,11 @@ namespace WPEFramework {
 
     namespace Plugin {
 
-        SERVICE_REGISTRATION(DisplaySettings, 1, 0);
-
         DisplaySettings* DisplaySettings::_instance = nullptr;
         IARM_Bus_PWRMgr_PowerState_t DisplaySettings::m_powerState = IARM_BUS_PWRMGR_POWERSTATE_STANDBY;
 
-        DisplaySettings::DisplaySettings()
-            : AbstractPlugin(2)
+        DisplaySettings::DisplaySettings(bool hdmiCecSinkAvailable)
+            : AbstractPlugin(2), hdmiCecSinkAvailable(hdmiCecSinkAvailable)
         {
             LOGINFO("ctor");
             DisplaySettings::_instance = this;
@@ -220,7 +217,15 @@ namespace WPEFramework {
 
 	    m_subscribed = false; //HdmiCecSink event subscription
 	    m_hdmiInAudioDeviceConnected = false;
-	    m_timer.connect(std::bind(&DisplaySettings::onTimer, this));
+            if (!hdmiCecSinkAvailable)
+            {
+                LOGWARN("HdmiCecSink is not available; HDMI_ARC events will not be set up");
+                LOGWARN("do not expect ARC to fully work !");
+            }
+            else
+            {
+                m_timer.connect(std::bind(&DisplaySettings::onTimer, this));
+            }
         }
 
         DisplaySettings::~DisplaySettings()
@@ -316,6 +321,7 @@ namespace WPEFramework {
                 LOGWARN("Current power state %d", m_powerState);
             }
             LOGWARN ("DisplaySettings::Initialize completes line:%d", __LINE__);
+
             // On success return empty, to indicate there is no error text.
             return (string());
         }
@@ -1165,6 +1171,8 @@ namespace WPEFramework {
             }
             else if (soundMode == "dolby digital 5.1")
                 mode = device::AudioStereoMode::kSurround;
+            else if (soundMode == "follow")
+                mode = device::AudioStereoMode::kFollow;
             else
             {
                 LOGWARN("Sound mode '%s' is empty or incompatible with known values, hence sound mode will not changed!", soundMode.c_str());
@@ -3493,6 +3501,17 @@ namespace WPEFramework {
         // 6.
         void DisplaySettings::onTimer()
         {
+            LOGINFO();
+            if (!hdmiCecSinkAvailable)
+            {
+                LOGERR("HdmiCecSink not available; HDMI_ARC events will not be set up");
+                if (m_timer.isActive())
+                {
+                    m_timer.stop();
+                }
+                return;
+            }
+
             // lock to prevent: parallel onTimer runs, destruction during onTimer
             lock_guard<mutex> lck(m_callMutex);
 
