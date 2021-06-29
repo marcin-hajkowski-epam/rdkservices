@@ -1760,15 +1760,16 @@ namespace WPEFramework {
                 LOGINFOMETHOD();
                 bool success = true;
                 string audioPort = parameters.HasLabel("audioPort") ? parameters["audioPort"].String() : "HDMI0";
-                int boost = 0;
+                dsSurroundVirtualizer_t virtualizer;
                 try
                 {
                         device::AudioOutputPort aPort = device::Host::getInstance().getAudioOutputPort(audioPort);
                                 if (aPort.isConnected())
                                 {
-                                        boost = aPort.getBassEnhancer();
-                                        response["enable"] = boost ? true : false ;
-                                        response["bassBoost"] = boost;
+                                        virtualizer = aPort.getSurroundVirtualizer();
+                                        response["enable"] = virtualizer.mode ? true : false ;
+                                        response["boost"] = virtualizer.boost;
+
                                 }
                                 else
                                 {
