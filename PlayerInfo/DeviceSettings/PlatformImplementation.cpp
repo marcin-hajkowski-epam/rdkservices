@@ -20,6 +20,7 @@
 #include "../Module.h"
 #include <interfaces/IPlayerInfo.h>
 #include <interfaces/IDolby.h>
+#include "manager.hpp"
 #include "host.hpp"
 #include "exception.hpp"
 #include "audioOutputPortType.hpp"
@@ -115,6 +116,10 @@ private:
 public:
     PlayerInfoImplementation()
     {
+        Utils::IARM::NAME = "Thunder_PlayerInfo";
+        Utils::IARM::init();
+        device::Manager::Initialize();
+
         gst_init(0, nullptr);
         UpdateAudioCodecInfo();
         UpdateVideoCodecInfo();
@@ -132,6 +137,7 @@ public:
         IARM_Result_t res;
         IARM_CHECK( IARM_Bus_UnRegisterEventHandler(IARM_BUS_DSMGR_NAME,IARM_BUS_DSMGR_EVENT_AUDIO_MODE) );
         PlayerInfoImplementation::_instance = nullptr;
+        device::Manager::DeInitialize();
     }
 
 public:
