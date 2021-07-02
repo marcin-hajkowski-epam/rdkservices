@@ -164,7 +164,10 @@ public:
         }
 
         if (currentResolution == "720p") res = RESOLUTION_720P;
+        else if (currentResolution == "720p50") res = RESOLUTION_720P;
+        else if (currentResolution == "720p60") res = RESOLUTION_720P;
         else if(currentResolution == "1080i") res = RESOLUTION_1080I;
+        else if(currentResolution == "1080p50") res = RESOLUTION_1080P;
         else if(currentResolution == "1080p60") res = RESOLUTION_1080P;
         else if(currentResolution == "2160p30") res = RESOLUTION_2160P30;
         else if(currentResolution == "2160p60") res = RESOLUTION_2160P60;
