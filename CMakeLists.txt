@@ -295,6 +295,10 @@ if(PLUGIN_USBACCESS)
     add_subdirectory(UsbAccess)
 endif()
 
+if(PLUGIN_FIREBOLTMEDIAPLAYER)
+    add_subdirectory(FireboltMediaPlayer)
+endif()
+
 if(PLUGIN_DTV)
     add_subdirectory(DTV)
 endif()
