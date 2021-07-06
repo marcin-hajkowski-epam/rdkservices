@@ -1,0 +1,15 @@
+{
+ "locator":"libWPEFrameworkFireboltMediaPlayer.so",
+ "classname":"FireboltMediaPlayer",
+ "precondition":[
+  "Platform"
+ ],
+ "callsign":"org.rdk.FireboltMediaPlayer",
+ "autostart":false,
+ "configuration":{
+  "root":{
+   "outofprocess":true,
+   "mode":"Container"
+  }
+ }
+}
