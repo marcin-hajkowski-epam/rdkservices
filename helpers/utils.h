@@ -380,14 +380,14 @@ namespace Utils
 #endif
         };
 
-        static void sendMessage(char* message)
+        static void sendMessage(const char* message)
         {
 #ifdef ENABLE_TELEMETRY_LOGGING
             t2_event_s("THUNDER_MESSAGE", message);
 #endif
         };
 
-        static void sendError(char* format, ...)
+        static void sendError(const char* format, ...)
         {
 #ifdef ENABLE_TELEMETRY_LOGGING
             va_list parameters;

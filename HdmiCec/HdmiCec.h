@@ -19,6 +19,9 @@
 
 #pragma once
 
+#include <atomic>
+#include <map>
+#include <mutex>
 #include <stdint.h>
 #include "ccec/FrameListener.hpp"
 #include "ccec/Connection.hpp"
@@ -59,9 +62,13 @@ namespace WPEFramework {
             uint32_t getEnabledWrapper(const JsonObject& parameters, JsonObject& response);
             uint32_t getCECAddressesWrapper(const JsonObject& parameters, JsonObject& response);
             uint32_t sendMessageWrapper(const JsonObject& parameters, JsonObject& response);
+            uint32_t enableOneTouchViewWrapper(const JsonObject& parameters, JsonObject& response);
+            uint32_t triggerActionWrapper(const JsonObject& parameters, JsonObject& response);
+            uint32_t setPingIntervalWrapper(const JsonObject& parameters, JsonObject& response);
+            uint32_t getConnectedDevicesWrapper(const JsonObject& parameters, JsonObject& response);
+            uint32_t setNameWrapper(const JsonObject& parameters, JsonObject& response);
+            uint32_t setOneTouchViewPolicyWrapper(const JsonObject& parameters, JsonObject& response);
             //End methods
-
-
         public:
             HdmiCec();
             virtual ~HdmiCec();
@@ -81,9 +88,22 @@ namespace WPEFramework {
             void DeinitializeIARM();
             static void cecMgrEventHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len);
             static void dsHdmiEventHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len);
+            static void cecHostDeviceStatusChangedEventHandler(const char* owner_str, IARM_EventId_t eventId, void* data_ptr, size_t len);
+            static void cecHostDeviceStatusUpdateEndEventHandler(const char* owner_str, IARM_EventId_t eventId, void* data_ptr, size_t len);
             void onCECDaemonInit();
             void cecStatusUpdated(void *evtStatus);
             void onHdmiHotPlug(int connectStatus);
+            void onDeviceStatusChanged(IARM_EventId_t eventId, const void* data_ptr, size_t len);
+            void onDeviceStatusUpdateEnd(IARM_EventId_t eventId, const void* data_ptr, size_t len);
+            void onDevicesChanged();
+
+            void getConnectedDevices(JsonArray &deviceList);
+
+            bool setOSDName(const char* name, int logical_address);
+            bool setVendorId(uint32_t vendor_id, int logical_address);
+            bool setConnectedState(int connected, int logical_address);
+            bool setPowerState(int power_state, int logical_address);
+            bool setSystemAudioMode(int system_audio_mode);
 
             bool loadSettings();
 
@@ -91,10 +111,10 @@ namespace WPEFramework {
             void setEnabled(bool enabled);
             void CECEnable(void);
             void CECDisable(void);
-            void getPhysicalAddress();
-            void getLogicalAddress();
+            bool getPhysicalAddress();
+            bool getLogicalAddress();
+            void readAddresses();
             bool getEnabled();
-            void setName(std::string name);
             std::string getName();
             JsonObject getCECAddresses();
 
@@ -105,8 +125,26 @@ namespace WPEFramework {
             void notify(const CECFrame &in) const;
             void onMessage(const char *message);
 
+            std::atomic<int> m_scan_id;
+            std::atomic_bool m_updated;
+            std::atomic_bool m_rescan_in_progress;
+            std::atomic_bool m_system_audio_mode;
+
+            typedef struct device_s
+            {
+                std::string physical_address;
+                std::string osdName;
+                std::string vendor_id;
+                bool connected = false;
+                bool power_state = true;
+            } device_t;
+
+            typedef std::map<std::string, device_t> m_devices_map_t;
+            m_devices_map_t m_devices;
+            m_devices_map_t m_scan_devices;
+            std::mutex m_mutex;
         };
-	} // namespace Plugin
+    } // namespace Plugin
 } // namespace WPEFramework
 
 
