@@ -1075,6 +1075,28 @@ static GSourceFuncs _handlerIntervention =
                 });
         }
 #endif
+
+        uint32_t CollectGarbage() override {
+            g_main_context_invoke_full(
+                _context,
+                G_PRIORITY_DEFAULT,
+                [](gpointer customdata) -> gboolean {
+                WebKitImplementation* object = static_cast<WebKitImplementation*>(customdata);
+#ifdef WEBKIT_GLIB_API
+                WebKitWebContext* context = webkit_web_view_get_context(object->_view);
+                webkit_web_context_garbage_collect_javascript_objects(context);
+#else
+                auto context = WKPageGetContext(object->_page);
+                WKContextGarbageCollectJavaScriptObjects(context);
+#endif
+                return G_SOURCE_REMOVE;
+            },
+            this,
+            [](gpointer customdata) {
+            });
+            return Core::ERROR_NONE;
+        }
+
         uint32_t Visible(bool& visible) const override
         {
             _adminLock.Lock();
