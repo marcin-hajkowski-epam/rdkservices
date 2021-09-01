@@ -15,13 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(PLUGIN_NAME HdcpProfile)
+set(PLUGIN_NAME LgiHdcpProfile)
 set(MODULE_NAME ${NAMESPACE}${PLUGIN_NAME})
 
 find_package(${NAMESPACE}Plugins REQUIRED)
 
 add_library(${MODULE_NAME} SHARED
-        HdcpProfile.cpp
+        LgiHdcpProfile.cpp
         Module.cpp
         ../helpers/utils.cpp)
 
