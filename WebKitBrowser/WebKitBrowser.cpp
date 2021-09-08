@@ -32,7 +32,6 @@ namespace Plugin {
         ASSERT(_service == nullptr);
         ASSERT(_browser == nullptr);
         ASSERT(_memory == nullptr);
-        ASSERT(_application == nullptr);
 
         _connectionId = 0;
         _service = service;
@@ -55,37 +54,29 @@ namespace Plugin {
                 _browser->Release();
                 _browser = nullptr;
 
+                stateControl->Release();
+
             } else {
-                _application = _browser->QueryInterface<Exchange::IApplication>();
-                if (_application != nullptr) {
-                    _browser->Register(&_notification);
+                _browser->Register(&_notification);
 
-                    const RPC::IRemoteConnection *connection = _service->RemoteConnection(_connectionId);
-                    _memory = WPEFramework::WebKitBrowser::MemoryObserver(connection);
-                    ASSERT(_memory != nullptr);
-                    if (connection != nullptr) {
-                        connection->Release();
-                    }
+                const RPC::IRemoteConnection *connection = _service->RemoteConnection(_connectionId);
+                _memory = WPEFramework::WebKitBrowser::MemoryObserver(connection);
+                ASSERT(_memory != nullptr);
+                if (connection != nullptr)
+                    connection->Release();
 
-                    if (stateControl->Configure(_service) != Core::ERROR_NONE) {
-                        if (_memory != nullptr) {
-                            _memory->Release();
-                            _memory = nullptr;
-                        }
-                        _application->Release();
-                        _application = nullptr;
-                        _browser->Unregister(&_notification);
-                        _browser->Release();
-                        _browser = nullptr;
-                    } else {
-                        stateControl->Register(&_notification);
-                    }
-                    stateControl->Release();
+                if (stateControl->Configure(_service) != Core::ERROR_NONE) {
+                  if (_memory != nullptr) {
+                    _memory->Release();
+                    _memory = nullptr;
+                  }
+                  _browser->Unregister(&_notification);
+                  _browser->Release();
+                  _browser = nullptr;
                 } else {
-                    stateControl->Release();
-                    _browser->Release();
-                    _browser = nullptr;
+                  stateControl->Register(&_notification);
                 }
+                stateControl->Release();
             }
         }
 
@@ -95,7 +86,6 @@ namespace Plugin {
             _service = nullptr;
         } else {
             RegisterAll();
-            Exchange::JWebBrowser::Register(*this, _browser);
         }
 
         return message;
@@ -105,7 +95,6 @@ namespace Plugin {
     {
         ASSERT(_service == service);
         ASSERT(_browser != nullptr);
-        ASSERT(_application != nullptr);
         ASSERT(_memory != nullptr);
 
         if (_browser == nullptr)
@@ -115,8 +104,6 @@ namespace Plugin {
         _service->Unregister(&_notification);
         _browser->Unregister(&_notification);
         _memory->Release();
-        _application->Release();
-        Exchange::JWebBrowser::Unregister(*this);
         UnregisterAll();
 
         PluginHost::IStateControl* stateControl(_browser->QueryInterface<PluginHost::IStateControl>());
@@ -144,7 +131,6 @@ namespace Plugin {
 
         _service = nullptr;
         _browser = nullptr;
-        _application = nullptr;
         _memory = nullptr;
     }
 
@@ -179,11 +165,10 @@ namespace Plugin {
             PluginHost::IStateControl* stateControl(_browser->QueryInterface<PluginHost::IStateControl>());
 
             ASSERT(stateControl != nullptr);
-            ASSERT(_application != nullptr);
 
             if (request.Verb == Web::Request::HTTP_GET) {
                 bool visible = false;
-                static_cast<const WPEFramework::Exchange::IApplication*>(_application)->Visible(visible);
+                static_cast<const WPEFramework::Exchange::IWebBrowser*>(_browser)->Visible(visible);
                 PluginHost::IStateControl::state currentState = stateControl->State();
                 Core::ProxyType<Web::JSONBodyType<WebKitBrowser::Data>> body(_jsonBodyDataFactory.Element());
                 string url;
@@ -207,9 +192,9 @@ namespace Plugin {
                 } else if (index.Remainder() == _T("Resume")) {
                     stateControl->Request(PluginHost::IStateControl::RESUME);
                 } else if (index.Remainder() == _T("Hide")) {
-                    _browser->Visibility(Exchange::IWebBrowser::VisibilityType::HIDDEN);
+                    _browser->Visible(Exchange::IWebBrowser::Visibility::HIDDEN);
                 } else if (index.Remainder() == _T("Show")) {
-                    _browser->Visibility(Exchange::IWebBrowser::VisibilityType::VISIBLE);
+                    _browser->Visible(Exchange::IWebBrowser::Visibility::VISIBLE);
                 } else if ((index.Remainder() == _T("URL")) && (request.HasBody() == true) && (request.Body<const Data>()->URL.Value().empty() == false)) {
                     const string url = request.Body<const Data>()->URL.Value();
                     _browser->URL(url);
@@ -250,7 +235,7 @@ namespace Plugin {
         string message(string("{ \"url\": \"") + URL + string("\", \"loaded\":true, \"httpstatus\":") + Core::NumberType<int32_t>(code).Text() + string(" }"));
         TRACE(Trace::Information, (_T("LoadFinished: %s"), message.c_str()));
         _service->Notify(message);
-        Exchange::JWebBrowser::Event::LoadFinished(*this, URL, code);
+        event_loadfinished(URL, code);
         URLChange(URL, true);
     }
 
@@ -259,7 +244,7 @@ namespace Plugin {
         string message(string("{ \"url\": \"") + URL + string("\" }"));
         TRACE(Trace::Information, (_T("LoadFailed: %s"), message.c_str()));
         _service->Notify(message);
-        Exchange::JWebBrowser::Event::LoadFailed(*this, URL);
+        event_loadfailed(URL);
     }
 
     void WebKitBrowser::URLChange(const string& URL, bool loaded)
@@ -267,7 +252,7 @@ namespace Plugin {
         string message(string("{ \"url\": \"") + URL + string("\", \"loaded\": ") + (loaded ? string("true") : string("false")) + string(" }"));
         TRACE(Trace::Information, (_T("URLChanged: %s"), message.c_str()));
         _service->Notify(message);
-        Exchange::JWebBrowser::Event::URLChange(*this, URL, loaded);
+        event_urlchange(URL, loaded);
     }
 
     void WebKitBrowser::VisibilityChange(const bool hidden)
@@ -275,14 +260,14 @@ namespace Plugin {
         TRACE(Trace::Information, (_T("VisibilityChange: { \"hidden\": \"%s\"}"), (hidden ? "true" : "false")));
         string message(string("{ \"hidden\": ") + (hidden ? _T("true") : _T("false")) + string("}"));
         _service->Notify(message);
-        Exchange::JWebBrowser::Event::VisibilityChange(*this, hidden);
+        event_visibilitychange(hidden);
     }
 
     void WebKitBrowser::PageClosure()
     {
         TRACE(Trace::Information, (_T("Closure: \"true\"")));
         _service->Notify(_T("{\"Closure\": true }"));
-        Exchange::JWebBrowser::Event::PageClosure(*this);
+        event_pageclosure();
     }
 
     void WebKitBrowser::BridgeQuery(const string& message)
