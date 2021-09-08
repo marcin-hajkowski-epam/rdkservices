@@ -132,7 +132,7 @@ namespace WPEFramework
                 string eventValue;
                 getStringParameter("eventValue", eventValue);
 
-                LOGT2((char *)eventName.c_str(), (char *)eventValue.c_str());
+                Telemetry::sendMessage(eventName.c_str(), eventValue.c_str());
             }
             else
             {
@@ -145,26 +145,39 @@ namespace WPEFramework
 
         void Telemetry::getProfiles(JsonArray &profiles)
         {
+            WDMP_STATUS wdmpStatus;
+            RFC_ParamData_t rfcParam;
+
             profiles.Clear();
 
-            DIR *d = opendir("/opt/.t2persistentfolder/");
-
-            if (NULL != d)
+            memset(&rfcParam, 0, sizeof(rfcParam));
+            wdmpStatus = getRFCParameter(RFC_CALLERID, RFC_REPORT_PROFILES, &rfcParam);
+            if((WDMP_SUCCESS == wdmpStatus || WDMP_ERR_DEFAULT_VALUE == wdmpStatus) && 0 != rfcParam.value[0])
             {
-                struct dirent *de;
+                profiles.Add(rfcParam.value);
+            }
+            else
+            {
+                LOGWARN("Failed to read %s, taking profiles from persistent storage", RFC_REPORT_PROFILES);
+                DIR *d = opendir("/opt/.t2persistentfolder/");
 
-                while ((de = readdir(d)))
+                if (NULL != d)
                 {
-                    if (0 == de->d_name[0])
-                        continue;
+                    struct dirent *de;
 
-                    if (0 == strcmp(de->d_name, ".") || 0 == strcmp(de->d_name, ".."))
-                        continue;
+                    while ((de = readdir(d)))
+                    {
+                        if (0 == de->d_name[0])
+                            continue;
 
-                    profiles.Add(de->d_name);
+                        if (0 == strcmp(de->d_name, ".") || 0 == strcmp(de->d_name, ".."))
+                            continue;
+
+                        profiles.Add(de->d_name);
+                    }
+
+                    closedir(d);
                 }
-
-                closedir(d);
             }
         }
 
