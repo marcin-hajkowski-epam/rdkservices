@@ -382,9 +382,7 @@ namespace Utils
 
         static void sendMessage(char* message)
         {
-#ifdef ENABLE_TELEMETRY_LOGGING
             t2_event_s("THUNDER_MESSAGE", message);
-#endif
         };
 
         static void sendMessage(char *marker, char* message)
