@@ -135,10 +135,6 @@ if(PLUGIN_ACTIVITYMONITOR)
     add_subdirectory(ActivityMonitor)
 endif()
 
-if(PLUGIN_TELEMETRY)
-    add_subdirectory(Telemetry)
-endif()
-
 if(PLUGIN_WAREHOUSE)
     add_subdirectory(Warehouse)
 endif()
