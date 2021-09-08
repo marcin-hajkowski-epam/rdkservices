@@ -23,12 +23,12 @@ Monitor plugin for Thunder framework.
 <a name="head.Scope"></a>
 ## Scope
 
-This document describes purpose and functionality of the Monitor plugin. It includes detailed specification about its configuration, methods and properties provided, as well as notifications sent.
+This document describes purpose and functionality of the Monitor plugin. It includes detailed specification of its configuration, methods and properties provided, as well as notifications sent.
 
 <a name="head.Case_Sensitivity"></a>
 ## Case Sensitivity
 
-All identifiers of the interfaces described in this document are case-sensitive. Thus, unless stated otherwise, all keywords, entities, properties, relations and actions should be treated as such.
+All identifiers on the interface described in this document are case-sensitive. Thus, unless stated otherwise, all keywords, entities, properties, relations and actions should be treated as such.
 
 <a name="head.Acronyms,_Abbreviations_and_Terms"></a>
 ## Acronyms, Abbreviations and Terms
@@ -61,7 +61,7 @@ The table below provides and overview of terms and abbreviations used in this do
 <a name="head.Description"></a>
 # Description
 
-The `Monitor` plugin provides a watchdog-like functionality for framework processes.
+The Monitor plugin provides a watchdog-like functionality for framework processes.
 
 The plugin is designed to be loaded and executed within the Thunder framework. For more information about the framework refer to [[Thunder](#ref.Thunder)].
 
@@ -75,7 +75,7 @@ The table below lists configuration options of the plugin.
 | callsign | string | Plugin instance name (default: *Monitor*) |
 | classname | string | Class name: *Monitor* |
 | locator | string | Library name: *libWPEFrameworkMonitor.so* |
-| autostart | boolean | Determines if the plugin shall be started automatically along with the framework |
+| autostart | boolean | Determines if the plugin is to be started automatically along with the framework |
 
 <a name="head.Methods"></a>
 # Methods
@@ -89,7 +89,6 @@ Monitor interface methods:
 | [restartlimits](#method.restartlimits) | Sets new restart limits for a service |
 | [resetstats](#method.resetstats) | Resets memory and process statistics for a single service watched by the Monitor |
 
-
 <a name="method.restartlimits"></a>
 ## *restartlimits <sup>method</sup>*
 
@@ -100,7 +99,7 @@ Sets new restart limits for a service.
 | Name | Type | Description |
 | :-------- | :-------- | :-------- |
 | params | object |  |
-| params.callsign | string | The callsign of a service for which measurement snapshots are reset |
+| params.callsign | string | The callsign of a service to reset measurements snapshot of |
 | params.restart | object |  |
 | params.restart.limit | number | Maximum number or restarts to be attempted |
 | params.restart.window | number | Time period (in seconds) within which failures must happen for the limit to be considered crossed |
@@ -129,7 +128,6 @@ Sets new restart limits for a service.
     }
 }
 ```
-
 #### Response
 
 ```json
@@ -139,7 +137,6 @@ Sets new restart limits for a service.
     "result": null
 }
 ```
-
 <a name="method.resetstats"></a>
 ## *resetstats <sup>method</sup>*
 
@@ -150,7 +147,7 @@ Resets memory and process statistics for a single service watched by the Monitor
 | Name | Type | Description |
 | :-------- | :-------- | :-------- |
 | params | object |  |
-| params.callsign | string | The callsign of a service for which statistics are reset |
+| params.callsign | string | The callsign of a service to reset statistics of |
 
 ### Result
 
@@ -181,7 +178,7 @@ Resets memory and process statistics for a single service watched by the Monitor
 | result.measurements.operational | boolean | Whether the service is up and running |
 | result.measurements.count | number | Number of measurements |
 | result.observable | string | A callsign of the watched service |
-| result.restart | object | Restart limits for failures applying to the service |
+| result.restart | object | Restart limits for memory/operational failures applying to the service |
 | result.restart.limit | number | Maximum number or restarts to be attempted |
 | result.restart.window | number | Time period (in seconds) within which failures must happen for the limit to be considered crossed |
 
@@ -199,7 +196,6 @@ Resets memory and process statistics for a single service watched by the Monitor
     }
 }
 ```
-
 #### Response
 
 ```json
@@ -243,7 +239,6 @@ Resets memory and process statistics for a single service watched by the Monitor
     }
 }
 ```
-
 <a name="head.Properties"></a>
 # Properties
 
@@ -254,7 +249,6 @@ Monitor interface properties:
 | Property | Description |
 | :-------- | :-------- |
 | [status](#property.status) <sup>RO</sup> | Service statistics |
-
 
 <a name="property.status"></a>
 ## *status <sup>property</sup>*
@@ -293,11 +287,11 @@ Provides access to the service statistics.
 | (property)[#].measurements.operational | boolean | Whether the service is up and running |
 | (property)[#].measurements.count | number | Number of measurements |
 | (property)[#].observable | string | A callsign of the watched service |
-| (property)[#].restart | object | Restart limits for failures applying to the service |
+| (property)[#].restart | object | Restart limits for memory/operational failures applying to the service |
 | (property)[#].restart.limit | number | Maximum number or restarts to be attempted |
 | (property)[#].restart.window | number | Time period (in seconds) within which failures must happen for the limit to be considered crossed |
 
-> The *callsign* shall be passed as the index to the property, e.g. *Monitor.1.status@WebServer*. If omitted, then all observed objects are returned on read.
+> The *callsign* shall be passed as the index to the property, e.g. *Monitor.1.status@WebServer*. If omitted then all observed objects will be returned on read.
 
 ### Example
 
@@ -310,7 +304,6 @@ Provides access to the service statistics.
     "method": "Monitor.1.status@WebServer"
 }
 ```
-
 #### Get Response
 
 ```json
@@ -356,11 +349,10 @@ Provides access to the service statistics.
     ]
 }
 ```
-
 <a name="head.Notifications"></a>
 # Notifications
 
-Notifications are autonomous events, triggered by the internals of the implementation, and broadcasted via JSON-RPC to all registered observers. Refer to [[Thunder](#ref.Thunder)] for information on how to register for a notification.
+Notifications are autonomous events, triggered by the internals of the implementation, and broadcasted via JSON-RPC to all registered observers.Refer to [[Thunder](#ref.Thunder)] for information on how to register for a notification.
 
 The following events are provided by the Monitor plugin:
 
@@ -369,7 +361,6 @@ Monitor interface events:
 | Event | Description |
 | :-------- | :-------- |
 | [action](#event.action) | Signals an action taken by the Monitor |
-
 
 <a name="event.action"></a>
 ## *action <sup>event</sup>*
@@ -382,7 +373,7 @@ Signals an action taken by the Monitor.
 | :-------- | :-------- | :-------- |
 | params | object |  |
 | params.callsign | string | Callsign of the service the Monitor acted upon |
-| params.action | string | The action executed by the Monitor on a service (must be one of the following: *Activate*, *Deactivate*, *StoppedRestarting*) |
+| params.action | string | The action executed by the Monitor on a service. One of: "Activate", "Deactivate", "StoppedRestarting" |
 | params.reason | string | A message describing the reason the action was taken |
 
 ### Example
@@ -398,4 +389,3 @@ Signals an action taken by the Monitor.
     }
 }
 ```
-
