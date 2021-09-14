@@ -286,6 +286,36 @@
                 "example": false
             }
         },
+        "mixedcontentpolicy": {
+            "summary": "Mixed content policy",
+            "params": {
+                "type": "string",
+                "enum": [
+                    "allowed",
+                    "blocked"
+                ],
+                "example": "blocked"
+            },
+            "errors": [
+                {
+                    "description": "Unknown policy",
+                    "$ref": "#/common/errors/unknownkey"
+                }
+            ]
+        },
+        "securityprofile": {
+            "summary": "Security profile for secure connections",
+            "params": {
+                "type": "string",
+                "example": "compatible"
+            },
+            "errors": [
+                {
+                    "description": "Unknown profile",
+                    "$ref": "#/common/errors/unknownkey"
+                }
+            ]
+        },
         "state": {
             "summary": "Running state of the service",
             "events": [

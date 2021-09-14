@@ -263,6 +263,8 @@ WebKitBrowser interface properties:
 | [httpcookieacceptpolicy](#property.httpcookieacceptpolicy) | HTTP cookies accept policy |
 | [languages](#property.languages) | User preferred languages |
 | [localstorageenabled](#property.localstorageenabled) | Local storage availability |
+| [mixedcontentpolicy](#property.mixedcontentpolicy) | Mixed content policy |
+| [securityprofile](#property.securityprofile) | Security profile for secure connections |
 | [state](#property.state) | Running state of the service |
 | [url](#property.url) | URL loaded in the browser |
 | [useragent](#property.useragent) | `UserAgent` string used by the browser |
@@ -531,6 +533,126 @@ Provides access to the local storage availability.
     "id": 1234567890,
     "method": "WebKitBrowser.1.localstorageenabled",
     "params": false
+}
+```
+
+#### Set Response
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "result": "null"
+}
+```
+
+<a name="property.mixedcontentpolicy"></a>
+## *mixedcontentpolicy <sup>property</sup>*
+
+Provides access to the mixed content policy.
+
+### Value
+
+| Name | Type | Description |
+| :-------- | :-------- | :-------- |
+| (property) | string | Mixed content policy (must be one of the following: *allowed*, *blocked*) |
+
+### Errors
+
+| Code | Message | Description |
+| :-------- | :-------- | :-------- |
+| 22 | ```ERROR_UNKNOWN_KEY``` | Unknown policy |
+
+### Example
+
+#### Get Request
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "method": "WebKitBrowser.1.mixedcontentpolicy"
+}
+```
+
+#### Get Response
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "result": "blocked"
+}
+```
+
+#### Set Request
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "method": "WebKitBrowser.1.mixedcontentpolicy",
+    "params": "blocked"
+}
+```
+
+#### Set Response
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "result": "null"
+}
+```
+
+<a name="property.securityprofile"></a>
+## *securityprofile <sup>property</sup>*
+
+Provides access to the security profile for secure connections.
+
+### Value
+
+| Name | Type | Description |
+| :-------- | :-------- | :-------- |
+| (property) | string | Security profile for secure connections |
+
+### Errors
+
+| Code | Message | Description |
+| :-------- | :-------- | :-------- |
+| 22 | ```ERROR_UNKNOWN_KEY``` | Unknown profile |
+
+### Example
+
+#### Get Request
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "method": "WebKitBrowser.1.securityprofile"
+}
+```
+
+#### Get Response
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "result": "compatible"
+}
+```
+
+#### Set Request
+
+```json
+{
+    "jsonrpc": "2.0",
+    "id": 1234567890,
+    "method": "WebKitBrowser.1.securityprofile",
+    "params": "compatible"
 }
 ```
 
