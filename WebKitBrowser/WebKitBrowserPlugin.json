@@ -8,6 +8,31 @@
         "description": "The `WebKitBrowser` plugin provides web browsing functionality based on the WebKit engine.",
         "version": "1.0"
     },
+    "definitions": {
+        "clientcertificate": {
+            "type": "object",
+            "description": "Description of a client certificate and URL for which it should be used",
+            "required": [ "url", "certificate", "key" ],
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "URL for which the certificate should be used. Only protocol, host and port parts of the URL are interpreted"
+                },
+                "certificate": {
+                    "type": "string",
+                    "description": "Path to a file with the certificate in PEM format"
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Path to a file with a key matching the certificate. If the key is not encrypted, then the key is in the PEM format"
+                },
+                "keydecryptor": {
+                    "type": "string",
+                    "description": "Name of a dynamic library that can be used to decrypt the key. Not needed if the key is not encrypted"
+                }
+            }
+        }
+    },
     "configuration": {
         "type": "object",
         "properties": {
@@ -112,6 +137,11 @@
                     "loadblankpageonsuspendenabled": {
                         "summary": "Load 'about:blank' before suspending the page",
                         "type": "boolean"
+                    },
+                    "clientcertificates": {
+                        "type": "array",
+                        "description": "List of client certificates and URLs for which they should be used",
+                        "items": { "$ref": "#/definitions/clientcertificate" }
                     }
                 },
                 "required": []

@@ -101,6 +101,12 @@ The table below lists configuration options of the plugin.
 | configuration?.watchdogchecktimeoutinseconds | number | <sup>*(optional)*</sup> How often to check main event loop for responsiveness (0 - disable) |
 | configuration?.watchdoghangthresholdtinseconds | number | <sup>*(optional)*</sup> The amount of time to give a process to recover before declaring a hang state |
 | configuration?.loadblankpageonsuspendenabled | boolean | <sup>*(optional)*</sup> Load 'about:blank' before suspending the page |
+| configuration?.clientcertificates | array | <sup>*(optional)*</sup> List of client certificates and URLs for which they should be used |
+| configuration?.clientcertificates[#] | object | <sup>*(optional)*</sup> Description of a client certificate and URL for which it should be used |
+| configuration?.clientcertificates[#].url | string | URL for which the certificate should be used. Only protocol, host and port parts of the URL are interpreted |
+| configuration?.clientcertificates[#].certificate | string | Path to a file with the certificate in PEM format |
+| configuration?.clientcertificates[#].key | string | Path to a file with a key matching the certificate. If the key is not encrypted, then the key is in the PEM format |
+| configuration?.clientcertificates[#]?.keydecryptor | string | <sup>*(optional)*</sup> Name of a dynamic library that can be used to decrypt the key. Not needed if the key is not encrypted |
 
 <a name="head.Methods"></a>
 # Methods
