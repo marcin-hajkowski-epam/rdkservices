@@ -60,8 +60,6 @@ const string OCIContainer::Initialize(PluginHost::IShell *service)
 
     mOmiProxy = std::make_shared<omi::OmiProxy>();
 
-    mOmiProxy->init();
-
     mOmiListenerId = mOmiProxy->registerListener(omiErrorListener, static_cast<const void*>(this));
 
     return string();
