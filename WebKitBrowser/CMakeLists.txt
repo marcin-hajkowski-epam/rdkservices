@@ -124,6 +124,7 @@ find_package(GLIB REQUIRED)
 find_package(WPEWebKit REQUIRED)
 find_package(WPEBackend REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_library(ODHERR odherr)
 if(DEFINED WEBKIT_GLIB_API)
 find_package(LibSoup REQUIRED)
 endif()
@@ -161,10 +162,12 @@ target_link_libraries(${MODULE_NAME}
         ${GLIB_LIBRARIES}
         ${WPE_WEBKIT_LIBRARIES}
         ${OPENSSL_LIBRARIES}
-        ${SECURITY_TOKEN_LIBRARY})
+        ${SECURITY_TOKEN_LIBRARY}
+        ${ODHERR})
 
 target_include_directories(${MODULE_NAME}
     PRIVATE
+        ../helpers
         ${WPE_BACKEND_INCLUDE_DIRS}
         ${WPE_WEBKIT_INCLUDE_DIRS}
         ${WPE_WEBKIT_INCLUDE_DIRS}/WPE
