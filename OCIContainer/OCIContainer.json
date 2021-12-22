@@ -39,6 +39,11 @@
             "properties": {
                 "success": {
                     "$ref": "#/definitions/success"
+                },
+                "error":{
+                        "summary": "An error message in case of a failure",
+                        "type": "string",
+                        "example": "internal dobby error"
                 }
             },
             "required": [
@@ -49,6 +54,11 @@
             "summary": "Whether the request succeeded",
             "type": "boolean",
             "example": "true"
+        },
+        "error": {
+            "summary": "Error message",
+            "type": "string",
+            "example": "mount failed"
         }
     },
     "methods": {
@@ -202,6 +212,11 @@
                     },
                     "success":{
                         "$ref": "#/definitions/success"
+                    },
+                    "error":{
+                        "summary": "An error message in case of a failure",
+                        "type": "string",
+                        "example": "internal dobby error"
                     }
                 },
                 "required": [
@@ -243,6 +258,11 @@
                     },
                     "success":{
                         "$ref": "#/definitions/success"
+                    },
+                    "error":{
+                        "summary": "An error message in case of a failure",
+                        "type": "string",
+                        "example": "could not remove symlink"
                     }
                 },
                 "required": [
@@ -422,6 +442,11 @@
                     },
                     "success":{
                         "$ref": "#/definitions/success"
+                    },
+                    "error":{
+                        "summary": "An error message in case of a failure",
+                        "type": "string",
+                        "example": "internal dobby error"
                     }
                 },
                 "required": [
