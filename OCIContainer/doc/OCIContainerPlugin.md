@@ -115,6 +115,7 @@ Executes a command inside a running container. The path to the executable must r
 | :-------- | :-------- | :-------- |
 | result | object |  |
 | result.success | boolean | Whether the request succeeded |
+| result.error | string | Error information |
 
 ### Example
 
@@ -180,6 +181,7 @@ Gets information about a running container such as CPU, memory, and GPU usage (G
 | result.info.state | string | The container state (must be one of the following: *Invalid*, *Starting*, *Running*, *Stopped*, *Paused*) |
 | result.info.timestamp | integer | The timestamp for container information |
 | result.success | boolean | Whether the request succeeded |
+| result.error | string | Error information |
 
 ### Example
 
@@ -252,6 +254,7 @@ Gets the state of a currently running container.
 | result.containerId | string | The ID of a container as returned by `listContainers` |
 | result.state | string | The container state (must be one of the following: *Invalid*, *Starting*, *Running*, *Stopped*, *Paused*) |
 | result.success | boolean | Whether the request succeeded |
+| result.error | string | Error information |
 
 ### Example
 
@@ -350,6 +353,7 @@ Pauses a currently running container.
 | :-------- | :-------- | :-------- |
 | result | object |  |
 | result.success | boolean | Whether the request succeeded |
+| result.error | string | Error information |
 
 ### Example
 
@@ -396,6 +400,7 @@ Resumes a previously paused container.
 | :-------- | :-------- | :-------- |
 | result | object |  |
 | result.success | boolean | Whether the request succeeded |
+| result.error | string | Error information |
 
 ### Example
 
@@ -554,6 +559,7 @@ Stops a currently running container.
 | :-------- | :-------- | :-------- |
 | result | object |  |
 | result.success | boolean | Whether the request succeeded |
+| result.error | string | Error information |
 
 ### Example
 
