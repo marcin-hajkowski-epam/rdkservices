@@ -209,7 +209,7 @@
                 "$ref": "#/definitions/result"
             }
         },
-        "startTimer ": {
+        "startTimer": {
             "summary": "Starts a timer with the specified interval. After the timer expires, a `timerExpired `notification is sent. The timer can execute once (one-shot mode) or repeatedly.",
             "events": [
                 "timerExpired"

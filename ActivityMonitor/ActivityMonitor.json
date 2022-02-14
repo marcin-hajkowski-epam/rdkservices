@@ -162,7 +162,7 @@
                         ]
                     },
                     "success": {
-                       "$ref": "#definitions/success"
+                       "$ref": "#/definitions/success"
                     }
                 },
                 "required": [
@@ -210,7 +210,7 @@
                         }
                     },
                     "success": {
-                        "$ref": "#definitions/success"
+                        "$ref": "#/definitions/success"
                     }
                 }, 
                 "required": [

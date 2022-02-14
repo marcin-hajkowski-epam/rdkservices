@@ -465,7 +465,7 @@
                                     "$ref": "#/definitions/deviceType"
                                 },
                                 "connected":{
-                                    "$ref": "#definitions/connected"
+                                    "$ref": "#/definitions/connected"
                                 }
                             },
                             "required": [

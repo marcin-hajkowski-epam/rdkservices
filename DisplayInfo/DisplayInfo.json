@@ -25,7 +25,7 @@
                 "example": 358612992
             }
         },
-        "audiopassthrough": {
+        "isaudiopassthrough": {
             "summary": "current audio passthrough status on HDMI",
             "readonly": true,
             "params": {
@@ -69,7 +69,7 @@
                 "example": "HDCP1x"
             }
         },
-        "hdrtype": {
+        "hdrsetting": {
             "summary": "HDR format in use",
             "readonly": true,
             "params": {
